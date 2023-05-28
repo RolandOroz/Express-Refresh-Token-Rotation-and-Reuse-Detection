@@ -10,6 +10,7 @@ const handleLogin = async (req, res) => {
     return res
       .status(400)
       .json({ message: "Username and password are required." });
+      
   const foundUser = await User.findOne({ username: user }).exec();
   if (!foundUser) return res.sendStatus(401); //unauthorized
   
@@ -20,10 +21,10 @@ const handleLogin = async (req, res) => {
     // create JWTs
     const accessToken = jwt.sign(
       {
-        UserInfo: {
-          username: foundUser.username,
-          roles: roles,
-        },
+        "UserInfo": {
+          "username": foundUser.username,
+          "roles": roles,
+        }
       },
       process.env.ACCESS_TOKEN_SECRET,
       // set to 'n' min (45s only for DEV MODE)
@@ -31,8 +32,8 @@ const handleLogin = async (req, res) => {
     );
 
 
-    const newRefreshToken = jwt.sign(
-      { username: foundUser.username },
+    const refreshToken = jwt.sign(
+      { "username": foundUser.username },
       process.env.REFRESH_TOKEN_SECRET,
       // set to 'n' Day (2 min only for DEV MODE)
       { expiresIn: "1d" }
