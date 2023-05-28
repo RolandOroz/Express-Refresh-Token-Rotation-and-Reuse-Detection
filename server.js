@@ -21,10 +21,10 @@ app.use(logger);
 
 // Handle options credential check - before CORS!
 // and fetch cookies credentials requirement
-app.use(credentials);
-
+//!!!!!!!!!!!!!!!!!!!!!!!!!app.use(credentials);
+app.use(cors({ credentials: true }));
 // Cross Origin Resource Sharing
-app.use(cors(corsOptions));
+//!!!!!!!!!!!!!!!!!!!!!!!!!app.use(cors(corsOptions));
 
 // built-in middleware to handle URL encoded data
 // in other words, form data:

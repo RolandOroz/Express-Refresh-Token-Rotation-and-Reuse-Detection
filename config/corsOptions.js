@@ -1,14 +1,14 @@
 const whiteList = require("./whiteList")
-const corsOptions = {
-  origin: (origin, callback) => {
+
+const corsOptions = (req, callback) => {
+    let corsOpt;
     //set to no origin(!origin) only in DEV MODE!!
-    if (whiteList.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
+    if (whiteList.indexOf(req.header('Origin')) !== -1) {
+      corsOpt = { origin: true }
     } else {
-      callback(new Error("Not allowed by CORS"));
+      corsOpt = { origin: false }
     }
-  },
-  optionsSuccessStatus: 200,
+    callback(null, corsOptions)
 };
 
 module.exports = corsOptions;
