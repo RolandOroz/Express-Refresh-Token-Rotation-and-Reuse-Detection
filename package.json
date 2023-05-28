@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Express_Refresh_Token_Rotation_and_Reuse_Detection_in_NodeJS_JWT_Authentication",
   "main": "server.js",
+  "proxy": "http://localhost:3000",
   "scripts": {
     "start": "node server",
     "dev": "nodemon server"
