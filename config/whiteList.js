@@ -5,6 +5,7 @@ const whiteList = [
   "http://localhost:3500/refresh",
   "http://localhost:3500/register",
   "http://localhost:3000",
+  "http://localhost:3000/register",
 ];
 
 module.exports = whiteList 
