@@ -6,7 +6,7 @@ const handleLogout = async (req, res) => {
   if (!cookies?.jwt) return res.sendStatus(204); // No content
   const refreshToken = cookies.jwt;
 
-  // Is refreshToken in DB
+  // Is refreshToken in DB?
   const foundUser = await User.findOne({ refreshToken }).exec();
   if (!foundUser) {
     res.clearCookie("jwt", {
@@ -14,7 +14,7 @@ const handleLogout = async (req, res) => {
       sameSite: "None",
       //Comment when in DEV MODE
       //TODO PRODUCTION uncomment: secure: true
-      //secure: true,
+      secure: true,
       // set to 1 Day (2 min only for DEV MODE)
       maxAge: 24 * 60 * 60 * 1000,
     });
@@ -22,7 +22,8 @@ const handleLogout = async (req, res) => {
   }
 
   // Delete refreshToken in DB
-  foundUser.refreshToken = foundUser.refreshToken.filter(refTok => refTok !== refreshToken);
+  //foundUser.refreshToken = foundUser.refreshToken.filter(refTok => refTok !== refreshToken);
+  foundUser.refreshToken = "";
   const result = await foundUser.save();
 
   //TODO PRODUCTION = delete log
@@ -33,7 +34,7 @@ const handleLogout = async (req, res) => {
     sameSite: "None",
     //Comment when in DEV MODE
     //TODO PRODUCTION uncomment: secure: true
-    //secure: true,
+    secure: true,
     // set to 1 Day (2 min only for DEV MODE)
     maxAge: 24 * 60 * 60 * 1000,
   });
