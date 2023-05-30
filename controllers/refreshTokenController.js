@@ -58,7 +58,7 @@ const handleRefreshToken = async (req, res) => {
             },
           },
           process.env.ACCESS_TOKEN_SECRET,
-          // make it 5 min (45s only in DEV MODE)
+          // make it 5min min (45s only in DEV MODE)
           { expiresIn: "300s" }
         );
 
