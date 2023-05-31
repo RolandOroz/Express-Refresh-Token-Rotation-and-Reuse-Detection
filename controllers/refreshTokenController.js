@@ -10,9 +10,9 @@ const handleRefreshToken = async (req, res) => {
       sameSite: "None",
       //Comment when in DEV MODE
       //TODO PRODUCTION uncomment: secure: true
-      //secure: true,
+      secure: true,
       // set to 1 Day (2 min only for DEV MODE)
-      maxAge: 24 * 60 * 60 * 1000,
+      
     });
 
   const foundUser = await User.findOne({ refreshToken }).exec();
@@ -24,7 +24,7 @@ const handleRefreshToken = async (req, res) => {
         process.env.REFRESH_TOKEN_SECRET,
         async (err, decoded) => {
             if (err) return res.sendStatus(403); // Forbidden
-            // refresh token rotation
+            console.log(" Attempted refresh token reuse!!");
             const preventReuseAttempt = await User.findOne({ username: decoded.username }).exec();
             preventReuseAttempt.refreshToken = [];
             const result = await preventReuseAttempt.save();
@@ -43,8 +43,11 @@ const handleRefreshToken = async (req, res) => {
       process.env.REFRESH_TOKEN_SECRET,
       async (err, decoded) => {
         if (err) {
+          console.log(" Expired refresh Token");
           foundUser.refreshToken = [...newRefreshTokenArray];
+          //TODO Production: delete result & log
           const result = await foundUser.save();
+          console.log(result);
         }
         if (err || foundUser.username !== decoded.username) return res.sendStatus(403);
 
@@ -59,11 +62,11 @@ const handleRefreshToken = async (req, res) => {
           },
           process.env.ACCESS_TOKEN_SECRET,
           // make it 5min min (45s only in DEV MODE)
-          { expiresIn: "300s" }
+          { expiresIn: "10min" }
         );
 
         const newRefreshToken = jwt.sign(
-          { username: foundUser.username },
+          { "username": foundUser.username },
           process.env.REFRESH_TOKEN_SECRET,
           // set to 'n' Day (2 min only for DEV MODE)
           { expiresIn: "1d" }
@@ -82,7 +85,7 @@ const handleRefreshToken = async (req, res) => {
             sameSite: "None",
             //TODO PRODUCTION uncomment secure: true when not in DEV MODE
             //TODO PRODUCTION uncomment secure: true,
-            //secure: true,
+            secure: true,
             // set to 'n' Day (2 min only for DEV MODE)
             maxAge: 24 * 60 * 60 * 1000,
           });
